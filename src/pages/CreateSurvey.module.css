@@ -1,0 +1,71 @@
+.heading {
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  margin: 50px auto 50px auto;
+  font-size: 24px;
+  justify-content: center;
+  align-items: center;
+}
+
+.subHeading {
+  font-weight: bold;
+  font-size: 16px;
+  margin: 20px auto 20px 20px;
+}
+
+.detail {
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  margin: 10px auto 10px 20px;
+}
+.detail .left {
+  width: 200px;
+}
+
+.detail .right {
+  left: 20px;
+}
+
+.button {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 10px;
+  width: 150px;
+  font-size: 16px;
+  background-color: lightgray;
+  cursor: pointer;
+  display: flex;
+  margin: 20px auto auto 500px;
+}
+
+.questionBlock {
+  margin: 30px auto auto 0;
+}
+
+.button2 {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 20px;
+  width: 150px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  margin: 20px auto auto 480px;
+  margin-bottom: 50px;
+}
+
+.button3 {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 20px;
+  width: 150px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  margin: 20px auto auto 220px;
+  margin-bottom: 50px;
+}
