@@ -33,7 +33,7 @@ const CreateSurvey = () => {
   const sendSurvey = () => {
     axios({
       method: "post",
-      url: "http://localhost:3000/app/v1/survey/create",
+      url: "https://webhook.freshyy.co/app/v1/survey/create",
       headers: {
         "Content-Type": "application/json",
       },
@@ -46,7 +46,7 @@ const CreateSurvey = () => {
       //   console.log("Created Survey", resp);
       axios({
         method: "post",
-        url: "http://localhost:3000/app/v1/survey/start",
+        url: "https://webhook.freshyy.co/app/v1/survey/start",
         data: {
           destination: number,
           surveyId: resp.data._id,

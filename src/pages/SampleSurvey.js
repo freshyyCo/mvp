@@ -9,7 +9,7 @@ const SampleSurvey = () => {
   const sendSurvey = () => {
     axios({
       method: "post",
-      url: "http://localhost:3000/app/v1/survey/start",
+      url: "https://webhook.freshyy.co/app/v1/survey/start",
       data: {
         destination: number,
         surveyId: "62ff72e3c590b260dc9a2d40",
