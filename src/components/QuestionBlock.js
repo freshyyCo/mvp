@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 const QuestionBlock = (props) => {
   const [quesType, setQuesType] = useState("single-choice");
+  const [ques, setQues] = useState("");
   const [options, setOptions] = useState([
     {
       optionNumber: 1,
@@ -21,19 +22,21 @@ const QuestionBlock = (props) => {
       content: "",
     },
   ]);
-  const [ques, setQues] = useState("");
 
   useEffect(() => {
-    const newState = props.questions.map((obj) => {
-      if (obj.number === props.question.number) {
-        return { ...obj, options: options, type: quesType };
-      }
-      return obj;
-    });
-    props.setQuestions(newState);
+    async function update() {
+      const newState = props.questions.map((obj) => {
+        if (obj.number === props.question.number) {
+          return { ...obj, options: options, type: quesType };
+        }
+        return obj;
+      });
+      await props.setQuestions(newState);
+    }
+    update();
   }, []);
 
-  const addOption = () => {
+  const addOption = async () => {
     setOptions((current) => [
       ...current,
       {
@@ -48,10 +51,10 @@ const QuestionBlock = (props) => {
       }
       return obj;
     });
-    props.setQuestions(newState);
+    await props.setQuestions(newState);
   };
 
-  const handleChange = (e, number) => {
+  function handleChange(e, number) {
     const newState = options.map((obj) => {
       if (obj.optionNumber === number) {
         return { ...obj, content: e.target.value };
@@ -59,37 +62,50 @@ const QuestionBlock = (props) => {
       return obj;
     });
     setOptions(newState);
+  }
 
-    const newState2 = props.questions.map((obj) => {
-      if (obj.number === props.question.number) {
-        return { ...obj, options: options };
-      }
-      return obj;
-    });
-    props.setQuestions(newState2);
-  };
+  //updating question type in parent async
+  useEffect(() => {
+    async function update() {
+      var newState = null;
+      newState = props.questions.map((obj) => {
+        if (obj.number === props.question.number) {
+          return { ...obj, type: quesType };
+        }
+        return obj;
+      });
+      await props.setQuestions(newState);
+    }
+    update();
+  }, [quesType]);
 
-  const handleTypeChange = (e) => {
-    setQuesType(e.target.value);
-    const newState = props.questions.map((obj) => {
-      if (obj.number === props.question.number) {
-        return { ...obj, type: quesType };
-      }
-      return obj;
-    });
-    props.setQuestions(newState);
-  };
+  //updating question content in parent async
+  useEffect(() => {
+    async function update() {
+      const newState = props.questions.map((obj) => {
+        if (obj.number === props.question.number) {
+          return { ...obj, question: ques };
+        }
+        return obj;
+      });
+      await props.setQuestions(newState);
+    }
+    update();
+  }, [ques]);
 
-  const handleQuesChange = (e) => {
-    setQues(e.target.value);
-    const newState = props.questions.map((obj) => {
-      if (obj.number === props.question.number) {
-        return { ...obj, question: ques };
-      }
-      return obj;
-    });
-    props.setQuestions(newState);
-  };
+  //updating options in parent async
+  useEffect(() => {
+    async function update() {
+      const newState = props.questions.map((obj) => {
+        if (obj.number === props.question.number) {
+          return { ...obj, options: options };
+        }
+        return obj;
+      });
+      await props.setQuestions(newState);
+    }
+    update();
+  }, [options]);
 
   return (
     <div className={classes.box}>
@@ -102,7 +118,7 @@ const QuestionBlock = (props) => {
             label="Enter the question here"
             variant="outlined"
             value={ques}
-            onChange={(e) => handleQuesChange(e)}
+            onChange={(e) => setQues(e.target.value)}
           />
         </div>
         <div className={classes.dropdown}>
@@ -113,7 +129,7 @@ const QuestionBlock = (props) => {
               id="demo-simple-select"
               value={quesType}
               label="Type"
-              onChange={(e) => handleTypeChange(e)}
+              onChange={(e) => setQuesType(e.target.value)}
             >
               <MenuItem value="single-choice">Single Choice</MenuItem>
               <MenuItem value="short-answer">Short Answer</MenuItem>

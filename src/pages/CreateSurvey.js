@@ -23,7 +23,7 @@ const CreateSurvey = () => {
       {
         number: questions.length + 1,
         question: "",
-        type: "",
+        type: "single-choice",
         options: [],
       },
     ]);
@@ -31,22 +31,36 @@ const CreateSurvey = () => {
   };
 
   const sendSurvey = () => {
+    console.log("QUESTIONS", questions);
+    var data = questions.map((element) => {
+      if (element.type === "single-choice") {
+        var finalOptions = [];
+        element.options.forEach((ele) => {
+          finalOptions.push(ele.content);
+        });
+        element.options = finalOptions;
+      } else {
+        element.options = null;
+      }
+      return element;
+    });
+    console.log("Data", data);
     axios({
       method: "post",
-      url: "https://webhook.freshyy.co/app/v1/survey/create",
+      url: `${process.env.REACT_APP_API_URL}app/v1/survey/create`,
       headers: {
         "Content-Type": "application/json",
       },
       data: {
         surveyName: name,
         startingMessageText: startingMessage,
-        questions: questions,
+        questions: data,
       },
     }).then((resp) => {
       //   console.log("Created Survey", resp);
       axios({
         method: "post",
-        url: "https://webhook.freshyy.co/app/v1/survey/start",
+        url: `${process.env.REACT_APP_API_URL}app/v1/survey/start`,
         data: {
           destination: number,
           surveyId: resp.data._id,
@@ -89,7 +103,9 @@ const CreateSurvey = () => {
               onChange={(e) => setNumber(e.target.value)}
             />
           </div>{" "}
-          <span style={{ marginLeft: "20px" }}>(Add in bulk coming soon!)</span>
+          <span style={{ marginLeft: "20px" }}>
+            (Please add country code without '+' sign)
+          </span>
         </div>{" "}
         <br />
         <div className={classes.detail}>

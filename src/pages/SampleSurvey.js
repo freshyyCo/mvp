@@ -9,7 +9,7 @@ const SampleSurvey = () => {
   const sendSurvey = () => {
     axios({
       method: "post",
-      url: "https://webhook.freshyy.co/app/v1/survey/start",
+      url: `${process.env.REACT_APP_API_URL}app/v1/survey/start`,
       data: {
         destination: number,
         surveyId: "62ff72e3c590b260dc9a2d40",
@@ -38,7 +38,9 @@ const SampleSurvey = () => {
               onChange={(e) => setNumber(e.target.value)}
             />
           </div>{" "}
-          <span style={{ marginLeft: "20px" }}>(Add in bulk coming soon!)</span>
+          <span style={{ marginLeft: "20px" }}>
+            (Please add country code without '+' sign)
+          </span>
         </div>{" "}
         <br />
       </div>
