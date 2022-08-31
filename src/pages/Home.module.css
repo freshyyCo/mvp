@@ -1,0 +1,15 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+  align-items: center;
+  justify-content: center;
+  margin: 1px solid;
+}
+
+.header div {
+  font-size: 32px;
+  color: #245a84;
+  font-weight: bold;
+  margin-left: 10px;
+}

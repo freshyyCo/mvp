@@ -3,6 +3,7 @@ import { TextField } from "@mui/material";
 import classes from "./CreateSurvey.module.css";
 import QuestionBlock from "../components/QuestionBlock";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const CreateSurvey = () => {
   const [questions, setQuestions] = useState([
@@ -67,6 +68,7 @@ const CreateSurvey = () => {
         },
       }).then((res) => {
         console.log("Sent", res);
+        toast.success("Survey Sent");
       });
     });
   };
@@ -76,74 +78,82 @@ const CreateSurvey = () => {
       <div className={classes.heading}>
         <b>Create New Survey</b>
       </div>
-      {/* Add basic details */}
-      <div>
-        <div className={classes.subHeading}>Enter Basic Details</div>
-        <div className={classes.detail}>
-          <div className={classes.left}>Survey Name</div>
-          <div className={classes.right}>
-            <TextField
-              id="outlined-basic"
-              label="Enter Survey Name"
-              variant="outlined"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-        </div>{" "}
-        <br />
-        <div className={classes.detail}>
-          <div className={classes.left}>Phone Number</div>
-          <div className={classes.right}>
-            <TextField
-              id="outlined-basic"
-              label="Eg: 916350xx505"
-              variant="outlined"
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-            />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          marginLeft: "40px",
+        }}
+      >
+        {/* Add basic details */}
+        <div>
+          <div className={classes.subHeading}>Enter Basic Details</div>
+          <div className={classes.detail}>
+            <div className={classes.left}>Survey Name</div>
+            <div className={classes.right}>
+              <TextField
+                id="outlined-basic"
+                label="Enter Survey Name"
+                variant="outlined"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
           </div>{" "}
-          <span style={{ marginLeft: "20px" }}>
-            (Please add country code without '+' sign)
-          </span>
-        </div>{" "}
-        <br />
-        <div className={classes.detail}>
-          <div className={classes.left}>What is the survey for?</div>
-          <div className={classes.right}>
-            <TextField
-              fullWidth
-              id="outlined-basic"
-              label="Objective"
-              variant="outlined"
-              value={startingMessage}
-              onChange={(e) => setStartingMessage(e.target.value)}
-            />
+          <br />
+          <div className={classes.detail}>
+            <div className={classes.left}>Phone Number</div>
+            <div className={classes.right}>
+              <TextField
+                id="outlined-basic"
+                label="Eg: 916350xx505"
+                variant="outlined"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+              />
+            </div>{" "}
+            <span style={{ marginLeft: "20px" }}>
+              (Please add country code without '+' sign)
+            </span>
+          </div>{" "}
+          <br />
+          <div className={classes.detail}>
+            <div className={classes.left}>What is the survey for?</div>
+            <div className={classes.right}>
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                label="Objective"
+                variant="outlined"
+                value={startingMessage}
+                onChange={(e) => setStartingMessage(e.target.value)}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Add Questions details */}
+        {/* Add Questions details */}
 
-      <div>
-        <div className={classes.subHeading}>Enter Questions</div>
-      </div>
-      {questions.map((ques) => (
-        <div className={classes.questionBlock}>
-          <QuestionBlock
-            questions={questions}
-            question={ques}
-            setQuestions={setQuestions}
-          />
+        <div>
+          <div className={classes.subHeading}>Enter Questions</div>
         </div>
-      ))}
+        {questions.map((ques) => (
+          <div className={classes.questionBlock}>
+            <QuestionBlock
+              questions={questions}
+              question={ques}
+              setQuestions={setQuestions}
+            />
+          </div>
+        ))}
 
-      <button className={classes.button} onClick={() => addQuestion()}>
-        + Add Question
-      </button>
+        <button className={classes.button} onClick={() => addQuestion()}>
+          + Add Question
+        </button>
 
-      <div className={classes.button2} onClick={() => sendSurvey()}>
-        Send Survey
+        <div className={classes.button2} onClick={() => sendSurvey()}>
+          Send Survey
+        </div>
       </div>
     </div>
   );

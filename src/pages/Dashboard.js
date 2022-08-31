@@ -8,10 +8,10 @@ const Dashboard = () => {
   return (
     <div>
       <div className={classes.textBox}>
-        <b>Welcome to Freshyy's Demo!</b>
+        <b>Welcome to Freshyy!</b>
         <br />
-        This is our MVP to show how good WhatsApp can be in leveraging various
-        use cases
+        This is our protoype to show how good WhatsApp can be in leveraging
+        various use cases
       </div>
 
       <div className={classes.buttons}>

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import classes from "./CreateSurvey.module.css";
 import { TextField } from "@mui/material";
+import { toast } from "react-toastify";
 
 const SampleSurvey = () => {
   const [number, setNumber] = useState("");
@@ -16,6 +17,7 @@ const SampleSurvey = () => {
       },
     }).then((res) => {
       console.log("Sent", res);
+      toast.success("Survey sent to your number!");
     });
   };
   return (
