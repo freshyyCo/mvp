@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import classes from "./CreateSurvey.module.css";
 import QuestionBlock from "../components/QuestionBlock";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Papa from "papaparse";
 
 const CreateSurvey = () => {
   const [questions, setQuestions] = useState([
@@ -17,6 +18,8 @@ const CreateSurvey = () => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [startingMessage, setStartingMessage] = useState("");
+  const [data, setData] = useState([]);
+  const [string, setString] = useState("");
 
   const addQuestion = () => {
     setQuestions((current) => [
@@ -31,9 +34,22 @@ const CreateSurvey = () => {
     console.log(questions);
   };
 
+  useEffect(() => {
+    if (number.length === 12) {
+      let arr = [];
+      arr.push(number);
+      setData((current) => [...current, arr]);
+      console.log("Data", data);
+    }
+    if (number.length !== 12) {
+      setData([]);
+      console.log("Data", data);
+    }
+  }, [number]);
+
   const sendSurvey = () => {
     console.log("QUESTIONS", questions);
-    var data = questions.map((element) => {
+    var quesData = questions.map((element) => {
       if (element.type === "single-choice") {
         var finalOptions = [];
         element.options.forEach((ele) => {
@@ -45,7 +61,7 @@ const CreateSurvey = () => {
       }
       return element;
     });
-    console.log("Data", data);
+    // console.log("Data", data);
     axios({
       method: "post",
       url: `${process.env.REACT_APP_API_URL}app/v1/survey/create`,
@@ -55,15 +71,15 @@ const CreateSurvey = () => {
       data: {
         surveyName: name,
         startingMessageText: startingMessage,
-        questions: data,
+        questions: quesData,
       },
     }).then((resp) => {
       //   console.log("Created Survey", resp);
       axios({
         method: "post",
-        url: `${process.env.REACT_APP_API_URL}app/v1/survey/start`,
+        url: `${process.env.REACT_APP_API_URL}app/v1/survey/start-bulk`,
         data: {
-          destination: number,
+          data: data,
           surveyId: resp.data._id,
         },
       }).then((res) => {
@@ -72,6 +88,25 @@ const CreateSurvey = () => {
       });
     });
   };
+
+  const fileUploadHandler = async (rawFile) => {
+    const parseFile = (rawFile) => {
+      return new Promise((resolve) => {
+        Papa.parse(rawFile, {
+          complete: (results) => {
+            resolve(results.data);
+          },
+        });
+      });
+    };
+    let parsedData = await parseFile(rawFile);
+    setData(parsedData);
+  };
+
+  useEffect(() => {
+    console.log("Data", data);
+    setString("[ Added ]");
+  }, [data]);
 
   return (
     <div>
@@ -109,11 +144,31 @@ const CreateSurvey = () => {
                 label="Eg: 916350xx505"
                 variant="outlined"
                 value={number}
+                disabled={data.length === 0 ? false : true}
                 onChange={(e) => setNumber(e.target.value)}
               />
-            </div>{" "}
+            </div>
+
+            {data.length === 0 ? (
+              <>
+                &nbsp; &nbsp; &nbsp;{"OR"}
+                <input
+                  type="file"
+                  id="actual-btn"
+                  accept=".csv"
+                  onChange={(e) => fileUploadHandler(e.target.files[0])}
+                  hidden
+                  // disabled={data.length === 0 ? false : true}
+                />
+                <label className={classes.upload} for="actual-btn">
+                  Upload CSV
+                </label>
+              </>
+            ) : null}
             <span style={{ marginLeft: "20px" }}>
-              (Please add country code without '+' sign)
+              {data.length === 0
+                ? "(Please add country code without '+' sign)"
+                : string}
             </span>
           </div>{" "}
           <br />
