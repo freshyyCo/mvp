@@ -73,7 +73,9 @@
 }
 
 .button3 {
-  border: 1px solid gray;
+  border: 1px solid #245a84;
+  background-color: #245a84;
+  color: white;
   border-radius: 5px;
   padding: 20px;
   width: 150px;

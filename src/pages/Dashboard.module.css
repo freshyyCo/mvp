@@ -29,7 +29,8 @@
   margin-right: auto;
   justify-content: center;
   align-items: center;
-  border: solid 2px;
+  border: solid 2px #245a84;
+  color: #245a84;
   border-radius: 10px;
   padding: 25px;
   cursor: pointer;
