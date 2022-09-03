@@ -5,6 +5,7 @@ import QuestionBlock from "../components/QuestionBlock";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Papa from "papaparse";
+import exportFromJSON from "export-from-json";
 
 const CreateSurvey = () => {
   const [questions, setQuestions] = useState([
@@ -20,6 +21,9 @@ const CreateSurvey = () => {
   const [startingMessage, setStartingMessage] = useState("");
   const [data, setData] = useState([]);
   const [string, setString] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+  const [analyticsData, setAnalyticsData] = useState(null);
+  const [surveyId, setSurveyId] = useState("");
 
   const addQuestion = () => {
     setQuestions((current) => [
@@ -39,7 +43,7 @@ const CreateSurvey = () => {
       let arr = [];
       arr.push(number);
       setData((current) => [...current, arr]);
-      console.log("Data", data);
+      // console.log("Data", data);
     }
     if (number.length !== 12) {
       setData([]);
@@ -61,7 +65,7 @@ const CreateSurvey = () => {
       }
       return element;
     });
-    // console.log("Data", data);
+
     axios({
       method: "post",
       url: `${process.env.REACT_APP_API_URL}app/v1/survey/create`,
@@ -75,6 +79,7 @@ const CreateSurvey = () => {
       },
     }).then((resp) => {
       //   console.log("Created Survey", resp);
+      setSurveyId(resp.data._id);
       axios({
         method: "post",
         url: `${process.env.REACT_APP_API_URL}app/v1/survey/start-bulk`,
@@ -84,6 +89,7 @@ const CreateSurvey = () => {
         },
       }).then((res) => {
         console.log("Sent", res);
+        setIsVisible(true);
         toast.success("Survey Sent");
       });
     });
@@ -104,9 +110,25 @@ const CreateSurvey = () => {
   };
 
   useEffect(() => {
-    console.log("Data", data);
+    // console.log("Data", data);
     setString("[ Added ]");
   }, [data]);
+
+  function downloadAnalytics() {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}app/v1/survey/analytics`, {
+        params: {
+          surveyId: surveyId,
+        },
+      })
+      .then((res) => {
+        console.log("Analytics Res", res);
+        const data = res.data;
+        const fileName = "data";
+        const exportType = exportFromJSON.types.csv;
+        exportFromJSON({ data, fileName, exportType });
+      });
+  }
 
   return (
     <div>
@@ -203,11 +225,21 @@ const CreateSurvey = () => {
         ))}
 
         <button className={classes.button} onClick={() => addQuestion()}>
-          + Add Question
+          + Add New Question
         </button>
 
-        <div className={classes.button2} onClick={() => sendSurvey()}>
-          Send Survey
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div className={classes.button2} onClick={() => sendSurvey()}>
+            Send Survey
+          </div>
+
+          <div
+            className={classes.button2}
+            onClick={() => downloadAnalytics()}
+            style={{ visibility: isVisible ? "visible" : "hidden" }}
+          >
+            Download Analytics
+          </div>
         </div>
       </div>
     </div>
