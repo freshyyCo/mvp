@@ -1,18 +1,32 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import classes from "./CreateSurvey.module.css";
 import { TextField } from "@mui/material";
 import { toast } from "react-toastify";
 
 const SampleSurvey = () => {
   const [number, setNumber] = useState("");
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (number.length === 12) {
+      let arr = [];
+      arr.push(number);
+      setData((current) => [...current, arr]);
+      console.log("Data", data);
+    }
+    if (number.length !== 12) {
+      setData([]);
+      console.log("Data", data);
+    }
+  }, [number]);
 
   const sendSurvey = () => {
     axios({
       method: "post",
-      url: `${process.env.REACT_APP_API_URL}app/v1/survey/start`,
+      url: `${process.env.REACT_APP_API_URL}app/v1/survey/start-bulk`,
       data: {
-        destination: number,
+        data: data,
         surveyId: "62ff72e3c590b260dc9a2d40",
       },
     }).then((res) => {
